@@ -43,27 +43,27 @@ gulp.task('sass', ()=>{
 
 gulp.task('js-lint', ()=>{
     return gulp.src('_js/**/*.{js,jsx}')
-        .pipe(jshint({linter: require('jshint-jsx').JSXHINT }))
+        .pipe(jshint({linter: require('jshint-jsx').JSXHINT, esversion: 6 }))
         .pipe(jshint.reporter(stylish));
 });
 
-gulp.task('js', ()=>{
-    return browserify('_js/main.js', {
+gulp.task('jsbuild', ()=>{
+    return browserify('_js/index.js', {
             debug: environment === 'development'
         })
-        .transform(babelify,{presets: ['react']}).on('error', handleError)
+        .transform(babelify,{presets: ['react', 'es2015']}).on('error', handleError)
         .bundle().on('error', handleError)
         .pipe(environment === 'production' ? buffer() : gutil.noop())
         .pipe(environment === 'production' ? uglify() : gutil.noop())
-        .pipe(source('scripts.js'))
+        .pipe(source('bundle.js'))
         .pipe(gulp.dest('../dist/_js'))
         .pipe(reload());
 });
 
 gulp.task('watch', ()=>{
     gulp.watch('index.html', ['html']);
-    gulp.watch('_css/*.scss', ['sass']);
-    gulp.watch('_js/*.{js,jsx}', ['js']);
+    gulp.watch('_css/**/*.scss', ['sass']);
+    gulp.watch('_js/**/*.{js,jsx}', ['js']);
 });
 
 gulp.task('server', ()=>{
@@ -73,7 +73,9 @@ gulp.task('server', ()=>{
     browserSync.init({proxy: 'localhost:8000', browser: 'google chrome'});
 });
 
-gulp.task('build', ['html','sass','js-lint','js']);
+gulp.task('js', ['js-lint','jsbuild']);
+
+gulp.task('build', ['html','sass','js']);
 
 gulp.task('default', ['build','watch','server']);
 
