@@ -1,5 +1,5 @@
 import React from 'react';
-//import ModalEditorBox from './modal/ModalEditBox'
+import ModalEditorBox from './modal/ModalEditorBox'
 import RecipeBox from './recipe/RecipeBox'
 
 export default React.createClass({

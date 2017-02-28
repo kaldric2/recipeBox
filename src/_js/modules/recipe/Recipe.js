@@ -1,4 +1,8 @@
 import React from 'react'
+import RLEditButton from './RLEditButton'
+import RLDeleteButton from './RLDeleteButton'
+
+import Collapsible from 'react-collapsible'
 
 export default React.createClass({
     render() {
@@ -7,14 +11,14 @@ export default React.createClass({
             ingredients.push(<li key={idx}>{element}</li>);
         })
         return (
-            <div>
-                <h3>{this.props.title}</h3>
+            <Collapsible trigger={this.props.title}>
                 <div>
                     <ul>
                         {ingredients}
                     </ul>
                 </div>
-            </div>
+                <RLEditButton/><RLDeleteButton/>
+            </Collapsible>
         )
     }
 })
